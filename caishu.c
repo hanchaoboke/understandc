@@ -9,6 +9,17 @@
 #include<setjmp.h>
 
 jmp_buf jump_buffer;
+// 随机数
+int xrand = 0;
+
+// 函数原型声明
+int randomNum(int a, int b);
+int difficulty();
+int times(int diff);
+void guess(int xrand, int times, int diff);
+void guessRight(int guessNum);
+void guessWrong(int guessNum);
+void guessContinue();
 
 // 给定范围 计算随机数
 int randomNum(int a, int b) {
@@ -23,39 +34,13 @@ int randomNum(int a, int b) {
     x = a + rand() % (b - a + 1);
     return x;
 }
-// 随机数
-int xrand = 0;
-
-// 是否继续
-void guessContinue() {
-    int a = 0;
-    puts("是否继续？\n1.继续，0.退出\n");
-    printf("你的输入：");		scanf("%d", &a);
-    if (a == 1)
-        longjmp(jump_buffer, 1);
-    if (a == 0)
-        exit(0);
-}
-
-
-// 最后一次猜对
-void guessRight(int guessNum) {
-    printf("输入的是%d,恭喜你，猜中了\n", guessNum );
-    guessContinue();
-}
-
-// 最后一次猜错
-void guessWrong(int guessNum) {
-    printf("输入的是%d,没有猜中，请在再接再厉\n", guessNum );
-    guessContinue();
-}
 
 // 选择难度菜单 返回难度选项
 int difficulty() {
     int diff = 0;
     puts("请选择难度等级");
     puts("1.0~9\n2.0~99\n3.0~999\n0.退出");
-    printf("你的输入：");		scanf("%d", &diff);
+    printf("你的输入：");      scanf("%d", &diff);
     if (diff == 0)
         exit(0);
     return diff;
@@ -68,21 +53,21 @@ int times(int diff) {
     case 1:
         xrand = randomNum(0, 9);
         puts("你当前选择的难度等级0~9\n请输入想要猜的次数，0返回上一级");
-        printf("你的输入：");		scanf("%d", &times);
+        printf("你的输入：");      scanf("%d", &times);
         if (times == 0)
             longjmp(jump_buffer, 1);
         break;
     case 2:
         xrand = randomNum(0, 99);
         puts("你当前选择的难度等级0~99\n请输入想要猜的次数，0返回上一级");
-        printf("你的输入：");		scanf("%d", &times);
+        printf("你的输入：");      scanf("%d", &times);
         if (times == 0)
-           longjmp(jump_buffer, 1);
+            longjmp(jump_buffer, 1);
         break;
     case 3:
         xrand = randomNum(0, 999);
         puts("你当前选择的难度等级0~999\n请输入想要猜的次数，0返回上一级");
-        printf("你的输入：");		scanf("%d", &times);
+        printf("你的输入：");      scanf("%d", &times);
         if (times == 0)
             longjmp(jump_buffer, 1);
         break;
@@ -98,18 +83,18 @@ void guess(int xrand, int times, int diff) {
     int a = 0;
     switch (diff) {
     case 1:
-        a = 9;	break;
+        a = 9;  break;
     case 2:
-        a = 99;	break;
+        a = 99; break;
     case 3:
-        a = 999;	break;
+        a = 999;    break;
 
     }
     for (int i = times; i >= 0; i--) {
         if (i == 0)
             guessWrong(guessNum);
 
-        printf("剩余次数%d，请输入数字（0~%d，-1返回难度选择）：", i, a);	scanf("%d", &guessNum);
+        printf("剩余次数%d，请输入数字（0~%d，-1返回难度选择）：", i, a);   scanf("%d", &guessNum);
         if (guessNum == -1)
             break;
 
@@ -127,6 +112,31 @@ void guess(int xrand, int times, int diff) {
     }
 
 }
+
+// 最后一次猜对
+void guessRight(int guessNum) {
+    printf("输入的是%d,恭喜你，猜中了\n", guessNum );
+    guessContinue();
+}
+
+// 最后一次猜错
+void guessWrong(int guessNum) {
+    printf("输入的是%d,没有猜中，请在再接再厉\n", guessNum );
+    guessContinue();
+}
+
+// 是否继续
+void guessContinue() {
+    int a = 0;
+    puts("是否继续？\n1.继续，0.退出\n");
+    printf("你的输入：");        scanf("%d", &a);
+    if (a == 1)
+        longjmp(jump_buffer, 1);
+    if (a == 0)
+        exit(0);
+}
+
+
 
 int main() {
     int diffNum = 0;
